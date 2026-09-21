@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.Optional;
 import mk.ukim.finki.aibotbackend.integration.vezilka.VezilkaClient;
 import mk.ukim.finki.aibotbackend.model.domain.DonationBatch;
+import mk.ukim.finki.aibotbackend.model.domain.ExtractedPost;
+import mk.ukim.finki.aibotbackend.model.enums.DonationStatus;
+import mk.ukim.finki.aibotbackend.model.exception.DonationBatchNotFoundException;
+import mk.ukim.finki.aibotbackend.model.exception.InvalidDonationStateException;
 import mk.ukim.finki.aibotbackend.repository.DonationBatchRepository;
 import mk.ukim.finki.aibotbackend.service.domain.DonationService;
 import mk.ukim.finki.aibotbackend.service.domain.ExtractedPostService;
@@ -27,24 +31,42 @@ public class DonationServiceImpl implements DonationService {
 
     @Override
     public List<DonationBatch> findAll() {
-        throw new UnsupportedOperationException("TODO(student): Implement DonationService.findAll().");
+        return donationBatchRepository.findAll();
     }
 
     @Override
     public Optional<DonationBatch> findById(Long id) {
-        throw new UnsupportedOperationException("TODO(student): Implement DonationService.findById().");
+        return donationBatchRepository.findById(id);
     }
 
     @Override
     public DonationBatch createBatch(List<Long> postIds) {
-        // TODO(student): Load the posts (extractedPostService.findAllById), create a
-        //  DRAFT batch, attach the posts to it and save everything.
-        throw new UnsupportedOperationException("TODO(student): Implement DonationService.createBatch().");
+        List<ExtractedPost> list = extractedPostService.findAllById(postIds);
+        for(ExtractedPost list_item : list)
+        {
+            if(list_item.getDonationBatch() != null)
+            {
+                throw new IllegalArgumentException("Post " + list_item.getId() + " is already donated.");
+            }
+        }
+        DonationBatch batch = donationBatchRepository.save(new DonationBatch(DonationStatus.DRAFT));
+        for(ExtractedPost list_item : list)
+        {
+            list_item.setDonationBatch(batch);
+        }
+        extractedPostService.saveAll(list);
+        return batch;
     }
 
     @Override
     public DonationBatch approve(Long id) {
-        throw new UnsupportedOperationException("TODO(student): Implement DonationService.approve().");
+        DonationBatch donationBatch = findById(id).orElseThrow(() -> new DonationBatchNotFoundException(id));
+        if(donationBatch.getStatus() != DonationStatus.DRAFT)
+        {
+            throw new InvalidDonationStateException(id, donationBatch.getStatus());
+        }
+        donationBatch.setStatus(DonationStatus.APPROVED);
+        return donationBatchRepository.save(donationBatch);
     }
 
     @Override
