@@ -24,9 +24,9 @@ function App() {
             <Route element={<SessionsProvider><Outlet/></SessionsProvider>}>
               <Route path='sessions' element={<SessionsPage/>}/>
               <Route path='sessions/:id' element={<SessionDetailsPage/>}/>
+                <Route path='posts' element={<PostsPage/>}/>
+                <Route path='posts/:id' element={<PostDetailsPage/>}/>
             </Route>
-            <Route path='posts' element={<PostsPage/>}/>
-            <Route path='posts/:id' element={<PostDetailsPage/>}/>
             <Route path='donations' element={<DonationsPage/>}/>
           </Route>
         </Route>
