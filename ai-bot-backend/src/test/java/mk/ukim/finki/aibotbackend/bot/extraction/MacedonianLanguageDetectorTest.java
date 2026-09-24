@@ -1,6 +1,7 @@
 package mk.ukim.finki.aibotbackend.bot.extraction;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.Test;
 
 public class MacedonianLanguageDetectorTest {
