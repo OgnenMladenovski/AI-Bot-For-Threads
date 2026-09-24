@@ -4,8 +4,7 @@ package mk.ukim.finki.aibotbackend.bot.extraction;
  * Detects whether a text is written in Macedonian — the whole point of the
  * project is to donate <i>Macedonian</i> content to doniraj.vezilka.ai.
  *
- * <p>TODO(student): Provide an implementation. Options include a language
- * detection library, an {@code LlmClient} prompt, or a heuristic over the
+ * <p>Implemented by {@link MacedonianLanguageDetector} with a heuristic over the
  * Cyrillic script combined with Macedonian-specific letters (ѓ, ќ, ѕ, џ, љ, њ).</p>
  */
 public interface LanguageDetector {
