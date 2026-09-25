@@ -5,7 +5,6 @@ import com.microsoft.playwright.options.LoadState;
 import mk.ukim.finki.aibotbackend.config.BotProperties;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
 import java.nio.file.Path;
 import java.util.List;
 import java.util.regex.Matcher;

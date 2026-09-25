@@ -7,10 +7,9 @@ import mk.ukim.finki.aibotbackend.bot.browser.PageSnapshot;
  * The decision-making seam of the bot: a large language model that looks at
  * what the browser currently shows and decides what to do next.
  *
- * <p>TODO(student): Provide an implementation backed by an LLM provider of your
- * choice (a hosted API or a locally running model). Keep the provider-specific
- * details (API keys, model names, prompt formats) inside the implementation —
- * nothing outside this package may depend on them.</p>
+ * <p>Implemented by {@link GeminiLlmClient}, which calls the Gemini API over
+ * Spring's RestClient. The provider-specific details (API key, model name,
+ * prompt format) stay inside that class.</p>
  */
 public interface LlmClient {
     /**
