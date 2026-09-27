@@ -14,7 +14,7 @@ import java.util.Map;
 @Component
 public class GeminiLlmClient implements LlmClient{
 
-    //Rules for the model
+    //The RULES part of the Gemini prompt
     private static final String SYSTEM_PROMPT = """
         You are a bot that collects publicly visible posts from the Threads website.
         On every step you get a compact description of the current page and you choose ONE action.
@@ -56,7 +56,7 @@ public class GeminiLlmClient implements LlmClient{
 
     @Override
     public String complete(String systemPrompt, String userPrompt) {
-        //The API takes one input string combining the system prompt and the user prompt
+        //All the parts of the Gemini prompt (RULES + GOAL + STATE + PAGE) put together into the API as one single input string
         Map<String, Object> body = Map.of(
                 "model", model,
                 "input", systemPrompt + "\n\n" + userPrompt
@@ -132,7 +132,9 @@ public class GeminiLlmClient implements LlmClient{
     private String buildUserPrompt(PageSnapshot snapshot, String goal, List<BotAction> history) {
         StringBuilder prompt = new StringBuilder();
 
+        //The GOAL part of the Gemini prompt
         prompt.append("GOAL: ").append(goal).append("\n\n");
+        //The STATE part of the Gemini prompt
         prompt.append("CURRENT URL: ").append(snapshot.url()).append("\n");
         prompt.append("PAGE TITLE: ").append(snapshot.title()).append("\n\n");
         prompt.append("ACTIONS SO FAR:\n");
@@ -153,6 +155,7 @@ public class GeminiLlmClient implements LlmClient{
             }
         }
 
+        //The PAGE part of the Gemini prompt
         prompt.append("\nPAGE:\n").append(snapshot.domContent());
         return prompt.toString();
     }

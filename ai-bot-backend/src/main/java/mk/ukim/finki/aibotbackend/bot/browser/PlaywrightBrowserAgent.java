@@ -19,6 +19,7 @@ public class PlaywrightBrowserAgent implements BrowserAgent {
     private BrowserContext context;
     private Page page;
     private static final Pattern ELEMENT_INDEX = Pattern.compile("#?(\\d{1,3})");
+    //Builds the PAGE part of the Gemini prompt
     private static final String SNAPSHOT_SCRIPT = """
         () => {
           const lines = [];
@@ -49,10 +50,14 @@ public class PlaywrightBrowserAgent implements BrowserAgent {
             if (!isVisible(el)) continue;
             if (index >= 40) break;
             el.setAttribute('data-bot-id', String(index));
-            const tag = el.tagName.toLowerCase();
-            const label = (el.innerText || el.getAttribute('aria-label') || el.getAttribute('placeholder') || '')
-              .trim().replace(/\\s+/g, ' ').slice(0, 60);
-            lines.push('[' + index + '] ' + tag + ' "' + label + '"');
+                const tag = el.tagName.toLowerCase();
+                const type = el.getAttribute('type');
+                let descriptor = tag;
+                if (type) {
+                  descriptor = tag + ':' + type;
+                }
+                const label = (el.innerText || el.getAttribute('aria-label') || el.getAttribute('placeholder') || '').trim().replace(/\\\\s+/g, ' ').slice(0, 60);
+                lines.push('[' + index + '] ' + descriptor + ' "' + label + '"');
             index++;
           }
 

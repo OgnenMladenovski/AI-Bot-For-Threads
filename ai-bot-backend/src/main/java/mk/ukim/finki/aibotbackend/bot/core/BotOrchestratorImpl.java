@@ -1,6 +1,5 @@
 package mk.ukim.finki.aibotbackend.bot.core;
 
-import lombok.extern.slf4j.Slf4j;
 import mk.ukim.finki.aibotbackend.model.domain.ExtractedPost;
 import mk.ukim.finki.aibotbackend.model.domain.ExtractionSession;
 import mk.ukim.finki.aibotbackend.model.domain.ExtractionTarget;
@@ -14,7 +13,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Slf4j
 @Service
 public class BotOrchestratorImpl implements BotOrchestrator {
     private final SocialNetworkBot socialNetworkBot;
@@ -58,13 +56,11 @@ public class BotOrchestratorImpl implements BotOrchestrator {
                         .toList();
 
                 extractedPostService.saveAll(posts);
-                log.info("Target {} '{}' produced {} post(s).", target.getType(), target.getValue(), posts.size());
             }
             extractionSessionService.complete(sessionId);
         }
         catch (RuntimeException exception) {
             extractionSessionService.fail(sessionId);
-            log.error("Extraction session {} failed.", sessionId, exception);
         }
         finally {
             socialNetworkBot.shutdown();
