@@ -5,12 +5,6 @@ import type { CreateSessionRequest, SessionResponse } from '../api/types/session
 import SessionsContext from '../contexts/sessionsContext.ts';
 import useSnackbar from '../hooks/useSnackbar.ts';
 
-/**
- * Fully provided as the reference example of the provider pattern used in
- * this template — mirror it when you build the posts and donations features.
- * Note: until the backend TODO(student) services are implemented, every call
- * surfaces a "Not Implemented" error snackbar.
- */
 const SessionsProvider = ({ children }: { children: React.ReactNode }) => {
   const { showSnackbar } = useSnackbar();
 

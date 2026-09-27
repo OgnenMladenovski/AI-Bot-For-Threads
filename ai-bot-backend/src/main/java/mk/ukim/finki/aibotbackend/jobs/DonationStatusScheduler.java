@@ -6,11 +6,6 @@ import mk.ukim.finki.aibotbackend.service.domain.DonationService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-/**
- * Periodically asks doniraj.vezilka.ai what happened to the SUBMITTED
- * donation batches. The heavy lifting is in
- * {@code DonationService.refreshSubmittedStatuses()} — TODO(student).
- */
 @Component
 @Slf4j
 public class DonationStatusScheduler {

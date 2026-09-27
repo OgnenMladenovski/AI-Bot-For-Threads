@@ -78,9 +78,6 @@ public class JwtWebSecurityConfig {
                         "/api/user/me"
                     )
                     .authenticated()
-                    // TODO(student): Tighten these rules if your solution introduces
-                    //  administrator-only operations (see the e-shop reference project
-                    //  for per-method, per-path examples).
                     .requestMatchers(
                         "/api/sessions/**",
                         "/api/posts/**",

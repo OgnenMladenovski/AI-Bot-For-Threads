@@ -5,10 +5,6 @@ import useSessions from '../../../../hooks/useSessions.ts';
 import SessionCard from '../../../components/session/SessionCard/SessionCard.tsx';
 import StartSessionDialog from '../../../components/session/StartSessionDialog/StartSessionDialog.tsx';
 
-/**
- * The bot control panel. The data flow (useSessions -> SessionCard) is
- * provided; TODO(student): finish StartSessionDialog and SessionCard.
- */
 const SessionsPage = () => {
   const { sessions, loading } = useSessions();
 
