@@ -56,6 +56,15 @@ public class GeminiLlmClient implements LlmClient{
 
     @Override
     public String complete(String systemPrompt, String userPrompt) {
+        //The free Gemini tier allows only 15 requests per minute, so every request waits before it is sent
+        try {
+            Thread.sleep(5000);
+        }
+        catch (InterruptedException exception) {
+            Thread.currentThread().interrupt();
+            throw new BotExecutionException("The wait for the Gemini rate limit was interrupted.", exception);
+        }
+
         //All the parts of the Gemini prompt (RULES + GOAL + STATE + PAGE) put together into the API as one single input string
         Map<String, Object> body = Map.of(
                 "model", model,
@@ -102,7 +111,15 @@ public class GeminiLlmClient implements LlmClient{
             return new BotDecision(null, true, "The last three actions were the same, stopping.");
         }
 
-        String answer = complete(SYSTEM_PROMPT, buildUserPrompt(snapshot, goal, history));
+        //When Gemini refuses the call the session stops with the posts collected so far instead of failing
+        String answer;
+        try {
+            answer = complete(SYSTEM_PROMPT, buildUserPrompt(snapshot, goal, history));
+        }
+        catch (org.springframework.web.client.RestClientException exception) {
+            return new BotDecision(null, true, "Gemini did not answer, stopping with what was collected.");
+        }
+
         return parseDecision(answer);
     }
 

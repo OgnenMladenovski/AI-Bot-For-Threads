@@ -56,7 +56,7 @@ public class PlaywrightBrowserAgent implements BrowserAgent {
                 if (type) {
                   descriptor = tag + ':' + type;
                 }
-                const label = (el.innerText || el.getAttribute('aria-label') || el.getAttribute('placeholder') || '').trim().replace(/\\\\s+/g, ' ').slice(0, 60);
+                const label = (el.innerText || el.getAttribute('aria-label') || el.getAttribute('placeholder') || '').trim().replace(/\\s+/g, ' ').slice(0, 60);
                 lines.push('[' + index + '] ' + descriptor + ' "' + label + '"');
             index++;
           }
@@ -87,11 +87,14 @@ public class PlaywrightBrowserAgent implements BrowserAgent {
               lines.push('time=' + timeEl.getAttribute('datetime'));
             }
             lines.push('text=' + cleanText(text, author));
+            let mediaCount = 0;
             for (const img of container.querySelectorAll('img')) {
               if (!img.src) continue;
-              if (img.naturalWidth < 300) continue;
-              if ((img.alt || '').toLowerCase().includes('profile picture')) continue;
+              const box = img.getBoundingClientRect();
+              if (box.width < 100) continue;
+              if (mediaCount >= 4) break;
               lines.push('media=IMAGE|' + img.src);
+              mediaCount++;
             }
             for (const video of container.querySelectorAll('video')) {
               if (video.src) lines.push('media=VIDEO|' + video.src);
@@ -192,8 +195,8 @@ public class PlaywrightBrowserAgent implements BrowserAgent {
 
         String domContent = (String) page.evaluate(SNAPSHOT_SCRIPT);
 
-        if (domContent.length() > 10000) {
-            domContent = domContent.substring(0, 10000);
+        if (domContent.length() > 25000) {
+            domContent = domContent.substring(0, 25000);
 
             int lastBlockEnd = domContent.lastIndexOf("[/POST]");
             if (lastBlockEnd > 0) {

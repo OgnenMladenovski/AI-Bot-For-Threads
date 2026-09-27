@@ -5,9 +5,8 @@ import mk.ukim.finki.aibotbackend.model.enums.DonationStatus;
 /**
  * The integration seam towards <a href="https://doniraj.vezilka.ai">doniraj.vezilka.ai</a>.
  *
- * <p>TODO(student): Provide an implementation using the submission mechanism
- * agreed with the professor (HTTP API or automated form submission), configured
- * through {@link VezilkaProperties}. Throw
+ * <p>Implemented by {@link HttpVezilkaClient} over the public donation API,
+ * configured through {@link VezilkaProperties}. Throw
  * {@code VezilkaIntegrationException} when communication fails.</p>
  */
 public interface VezilkaClient {

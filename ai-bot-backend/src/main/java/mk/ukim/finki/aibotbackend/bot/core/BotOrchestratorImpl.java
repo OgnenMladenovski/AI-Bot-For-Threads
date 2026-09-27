@@ -61,6 +61,7 @@ public class BotOrchestratorImpl implements BotOrchestrator {
         }
         catch (RuntimeException exception) {
             extractionSessionService.fail(sessionId);
+            throw exception;
         }
         finally {
             socialNetworkBot.shutdown();
