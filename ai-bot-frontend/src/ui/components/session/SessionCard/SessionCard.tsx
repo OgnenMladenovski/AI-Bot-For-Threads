@@ -1,25 +1,31 @@
-import { Box, Button, Card, CardActions, CardContent, Chip, Typography } from '@mui/material';
+import { Box, Button, Chip, Typography } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
 import InfoIcon from '@mui/icons-material/Info';
 import { useNavigate } from 'react-router';
 import type { SessionResponse, SessionStatus } from '../../../../api/types/session.ts';
 import useSessions from '../../../../hooks/useSessions.ts';
+import WovenCard from '../../common/WovenCard/WovenCard.tsx';
+import StatusBadge from '../../common/StatusBadge/StatusBadge.tsx';
 
 interface SessionCardProps {
-  session: SessionResponse;
+    session: SessionResponse;
 }
 
-const statusColors: Record<SessionStatus, 'default' | 'info' | 'warning' | 'success' | 'error'> = {
-    CREATED: 'default',
-    RUNNING: 'info',
-    PAUSED: 'warning',
-    COMPLETED: 'success',
-    FAILED: 'error'
+const accents: Record<SessionStatus, string> = {
+    CREATED: '#9B928A',
+    RUNNING: '#E0A329',
+    PAUSED: '#8A6A3B',
+    COMPLETED: '#3F6B4A',
+    FAILED: '#8C2F2F'
 };
 
-const formatTimestamp = (value: string | null) =>
-    value === null ? '—' : new Date(value).toLocaleString();
+const formatTimestamp = (value: string | null) => {
+    if (value === null) {
+        return '—';
+    }
+    return new Date(value).toLocaleString();
+};
 
 const SessionCard = ({ session }: SessionCardProps) => {
     const navigate = useNavigate();
@@ -27,58 +33,52 @@ const SessionCard = ({ session }: SessionCardProps) => {
 
     const canStart = session.status === 'CREATED' || session.status === 'PAUSED';
     const canStop = session.status === 'RUNNING';
+    const accent = accents[session.status];
 
     return (
-        <Card sx={{ maxWidth: 300, height: '100%', display: 'flex', flexDirection: 'column' }}>
-            <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
-                <Typography variant='h5'>{session.socialNetwork}</Typography>
-                <Typography variant='subtitle1' sx={{ flexGrow: 1 }}>{session.description}</Typography>
-
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    {session.targets.map((target) => (
-                        <Chip key={target.id} label={`${target.type}: ${target.value}`} size='small' variant='outlined'/>
-                    ))}
-                </Box>
-
-                <Typography variant='body2' color='text.secondary'>
-                    Started: {formatTimestamp(session.startedAt)}
+        <WovenCard
+            accent={accent}
+            eyebrow={
+                <Typography sx={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.12em', color: accent }}>
+                    {session.socialNetwork}
                 </Typography>
-                <Typography variant='body2' color='text.secondary'>
-                    Finished: {formatTimestamp(session.finishedAt)}
-                </Typography>
+            }
+            badge={<StatusBadge label={session.status} accent={accent}/>}
+            actions={
+                <>
+                    <Button size='small' startIcon={<InfoIcon/>} onClick={() => navigate(`/sessions/${session.id}`)}>
+                        Info
+                    </Button>
+                    <Box sx={{ display: 'flex', gap: 0.5 }}>
+                        <Button size='small' startIcon={<PlayArrowIcon/>} color='success' disabled={!canStart} onClick={() => onStart(session.id)}>
+                            Start
+                        </Button>
+                        <Button size='small' startIcon={<StopIcon/>} color='error' disabled={!canStop} onClick={() => onStop(session.id)}>
+                            Stop
+                        </Button>
+                    </Box>
+                </>
+            }
+        >
+            <Typography variant='h6' sx={{ lineHeight: 1.3, mb: 1.5 }}>
+                {session.description}
+            </Typography>
 
-                <Chip
-                    label={session.status}
-                    size='small'
-                    color={statusColors[session.status]}
-                    sx={{ alignSelf: 'flex-start' }}
-                />
-            </CardContent>
-            <CardActions sx={{ justifyContent: 'space-between' }}>
-                <Button
-                    startIcon={<InfoIcon/>}
-                    onClick={() => navigate(`/sessions/${session.id}`)}
-                >
-                    Info
-                </Button>
-                <Button
-                    startIcon={<PlayArrowIcon/>}
-                    color='success'
-                    disabled={!canStart}
-                    onClick={() => onStart(session.id)}
-                >
-                    Start
-                </Button>
-                <Button
-                    startIcon={<StopIcon/>}
-                    color='error'
-                    disabled={!canStop}
-                    onClick={() => onStop(session.id)}
-                >
-                    Stop
-                </Button>
-            </CardActions>
-        </Card>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, flexGrow: 1, alignContent: 'flex-start' }}>
+                {session.targets.map((target) => (
+                    <Chip key={target.id} label={`${target.type}: ${target.value}`} size='small' variant='outlined'/>
+                ))}
+            </Box>
+
+            <Box sx={{ mt: 2, pt: 1.5, borderTop: '1px dashed #E5E0DC' }}>
+                <Typography variant='caption' sx={{ display: 'block', color: 'text.secondary' }}>
+                    Started &nbsp;<Box component='span' sx={{ color: 'text.primary', fontWeight: 600 }}>{formatTimestamp(session.startedAt)}</Box>
+                </Typography>
+                <Typography variant='caption' sx={{ display: 'block', color: 'text.secondary' }}>
+                    Finished &nbsp;<Box component='span' sx={{ color: 'text.primary', fontWeight: 600 }}>{formatTimestamp(session.finishedAt)}</Box>
+                </Typography>
+            </Box>
+        </WovenCard>
     );
 };
 

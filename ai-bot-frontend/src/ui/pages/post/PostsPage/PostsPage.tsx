@@ -1,9 +1,11 @@
-import { Box, CircularProgress, Pagination, Typography } from '@mui/material';
+import { Box, CircularProgress, Pagination } from '@mui/material';
 import { useState } from 'react';
 import type { PostFilter } from '../../../../api/types/post.ts';
 import usePosts from '../../../../hooks/usePosts.ts';
 import PostFilters from '../../../components/post/PostFilters/PostFilters.tsx';
 import PostGrid from '../../../components/post/PostGrid/PostGrid.tsx';
+import SectionHeading from '../../../components/common/SectionHeading/SectionHeading.tsx';
+import EmptyState from '../../../components/common/EmptyState/EmptyState.tsx';
 
 const PostsPage = () => {
     const [filter, setFilter] = useState<PostFilter>({});
@@ -18,7 +20,7 @@ const PostsPage = () => {
 
     return (
         <Box>
-            <Typography variant='h5' sx={{ mb: 2 }}>Extracted Posts</Typography>
+            <SectionHeading title='Extracted Posts' subtitle='Everything the bot collected, with its Macedonian confidence score.'/>
             <PostFilters filter={filter} onChange={handleFilterChange}/>
             {loading && (
                 <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
@@ -26,9 +28,10 @@ const PostsPage = () => {
                 </Box>
             )}
             {!loading && (!posts || posts.content.length === 0) && (
-                <Typography color='text.secondary'>
-                    No extracted posts yet. Run an extraction session first.
-                </Typography>
+                <EmptyState
+                    title='No extracted posts yet'
+                    description='Run an extraction session first, then come back here to review what the bot found.'
+                />
             )}
             {!loading && posts && (
                 <>

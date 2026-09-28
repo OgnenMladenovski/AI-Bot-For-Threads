@@ -17,3 +17,11 @@ body {
     display: flex;
     flex-direction: column;
 }
+
+body {
+    background-color: #F9F7F5;
+    background-image:
+            repeating-linear-gradient(45deg, rgba(40, 26, 21, 0.03) 0 2px, transparent 2px 11px),
+            repeating-linear-gradient(-45deg, rgba(40, 26, 21, 0.03) 0 2px, transparent 2px 11px);
+    background-attachment: fixed;
+}

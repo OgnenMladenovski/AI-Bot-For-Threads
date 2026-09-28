@@ -1,4 +1,3 @@
-import './App.css';
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router';
 import Layout from './ui/components/layout/Layout/Layout.tsx';
 import HomePage from './ui/pages/home/HomePage/HomePage.tsx';
@@ -18,18 +17,18 @@ function App() {
       <Routes>
         <Route path='/register' element={<RegisterPage/>}/>
         <Route path='/login' element={<LoginPage/>}/>
-        <Route path='/' element={<Layout/>}>
-          <Route index element={<HomePage/>}/>
-          <Route element={<ProtectedRoute/>}>
-            <Route element={<SessionsProvider><Outlet/></SessionsProvider>}>
-              <Route path='sessions' element={<SessionsPage/>}/>
-              <Route path='sessions/:id' element={<SessionDetailsPage/>}/>
-                <Route path='posts' element={<PostsPage/>}/>
-                <Route path='posts/:id' element={<PostDetailsPage/>}/>
-            </Route>
-            <Route path='donations' element={<DonationsPage/>}/>
+          <Route path='/' element={<Layout/>}>
+              <Route element={<ProtectedRoute/>}>
+                  <Route index element={<HomePage/>}/>
+                  <Route element={<SessionsProvider><Outlet/></SessionsProvider>}>
+                      <Route path='sessions' element={<SessionsPage/>}/>
+                      <Route path='sessions/:id' element={<SessionDetailsPage/>}/>
+                      <Route path='posts' element={<PostsPage/>}/>
+                      <Route path='posts/:id' element={<PostDetailsPage/>}/>
+                  </Route>
+                  <Route path='donations' element={<DonationsPage/>}/>
+              </Route>
           </Route>
-        </Route>
       </Routes>
     </BrowserRouter>
   );
