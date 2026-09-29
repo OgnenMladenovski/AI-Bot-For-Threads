@@ -17,7 +17,6 @@ const PostFilters = ({ filter, onChange }: PostFiltersProps) => {
             onChange({ ...filter, search: search.trim() === '' ? undefined : search.trim() });
         }, 300);
         return () => clearTimeout(timeout);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [search]);
 
     const handleSessionChange = (event: SelectChangeEvent) => {
@@ -37,7 +36,7 @@ const PostFilters = ({ filter, onChange }: PostFiltersProps) => {
 
     return (
         <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap', mb: 2 }}>
-            <FormControl sx={{ minWidth: 160 }}>
+            <FormControl sx={{ minWidth: 200 }}>
                 <InputLabel>Session</InputLabel>
                 <Select
                     label='Session'
@@ -45,11 +44,17 @@ const PostFilters = ({ filter, onChange }: PostFiltersProps) => {
                     onChange={handleSessionChange}
                     variant='outlined'>
                     <MenuItem value=''>All</MenuItem>
-                    {sessions.map((session) => (
-                        <MenuItem key={session.id} value={session.id}>
-                            #{session.id} — {session.socialNetwork}
-                        </MenuItem>
-                    ))}
+                    {sessions.map((session) => {
+                        let label = session.description;
+                        if (!label) {
+                            label = session.socialNetwork;
+                        }
+                        return (
+                            <MenuItem key={session.id} value={session.id}>
+                                #{session.id} · {label}
+                            </MenuItem>
+                        );
+                    })}
                 </Select>
             </FormControl>
 

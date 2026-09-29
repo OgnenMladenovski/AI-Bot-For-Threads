@@ -7,7 +7,6 @@ import mk.ukim.finki.aibotbackend.model.exception.VezilkaIntegrationException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
-
 import java.util.List;
 import java.util.Map;
 
