@@ -49,15 +49,17 @@ The Bot is not a scraper with hardcoded selectors. On every step it takes a snap
 for each step, up to bot.max-steps-per-target:
 
   1. Perceive   BrowserAgent.snapshot()
-                PlaywrightBrowserAgent runs a script in the page and returns [ELEMENTS] (clickable items)
-                and [POST] blocks (url, author, time, text, media)
+                PlaywrightBrowserAgent runs a script in the page and returns
+                a text snapshot with [ELEMENTS] (clickable items) and
+                [POST] blocks (url, author, time, text, media)
 
   2. Decide     LlmClient.decideNextAction(snapshot, goal, history)
-                GeminiLlmClient builds the prompt out of RULES + GOAL + STATE + PAGE
-                and parses the JSON answer into a BotDecision
+                GeminiLlmClient builds the prompt out of RULES + GOAL + STATE
+                and PAGE, then parses the JSON answer into a BotDecision
 
-  3. Act        the action is dispatched onto the BrowserAgent, on EXTRACT the
-                ContentExtractor parses the snapshot and the LanguageDetector rates every post
+  3. Act        the action is dispatched onto the BrowserAgent. On EXTRACT 
+                the ContentExtractor parses the snapshot and the 
+                LanguageDetector scores every post from 0.0 to 1.0
 ```
 
 **The Bot stops:**
