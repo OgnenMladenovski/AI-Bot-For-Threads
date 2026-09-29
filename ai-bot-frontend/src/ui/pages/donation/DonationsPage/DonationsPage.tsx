@@ -8,7 +8,7 @@ import SectionHeading from '../../../components/common/SectionHeading/SectionHea
 import EmptyState from '../../../components/common/EmptyState/EmptyState.tsx';
 
 const DonationsPage = () => {
-    const { donations, loading, onApprove, onSubmit } = useDonations();
+    const { donations, loading, onCreate, onApprove, onSubmit } = useDonations();
 
     const [newBatchDialogOpen, setNewBatchDialogOpen] = useState<boolean>(false);
 
@@ -43,6 +43,7 @@ const DonationsPage = () => {
                     <SubmitDonationDialog
                         open={newBatchDialogOpen}
                         onClose={() => setNewBatchDialogOpen(false)}
+                        onCreate={onCreate}
                     />
                 </>}
         </Box>

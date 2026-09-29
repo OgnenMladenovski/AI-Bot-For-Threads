@@ -1,17 +1,17 @@
 import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, ListItemButton, ListItemText, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import postApi from '../../../../api/postApi.ts';
+import type { CreateDonationBatchRequest } from '../../../../api/types/donation.ts';
 import type { PostResponse } from '../../../../api/types/post.ts';
-import useDonations from '../../../../hooks/useDonations.ts';
 import useSnackbar from '../../../../hooks/useSnackbar.ts';
 
 interface SubmitDonationDialogProps {
     open: boolean;
     onClose: () => void;
+    onCreate: (data: CreateDonationBatchRequest) => Promise<void>;
 }
 
-const SubmitDonationDialog = ({ open, onClose }: SubmitDonationDialogProps) => {
-    const { onCreate } = useDonations();
+const SubmitDonationDialog = ({ open, onClose, onCreate }: SubmitDonationDialogProps) => {
     const { showSnackbar } = useSnackbar();
     const [posts, setPosts] = useState<PostResponse[]>([]);
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
@@ -33,9 +33,12 @@ const SubmitDonationDialog = ({ open, onClose }: SubmitDonationDialogProps) => {
     }, [open, showSnackbar]);
 
     const handleToggle = (id: number) => {
-        setSelectedIds((prev) =>
-            prev.includes(id) ? prev.filter((selected) => selected !== id) : [...prev, id]
-        );
+        setSelectedIds((prev) => {
+            if (prev.includes(id)) {
+                return prev.filter((selected) => selected !== id);
+            }
+            return [...prev, id];
+        });
     };
 
     const handleSubmit = async () => {
@@ -49,18 +52,19 @@ const SubmitDonationDialog = ({ open, onClose }: SubmitDonationDialogProps) => {
         <Dialog open={open} onClose={onClose} fullWidth maxWidth='md'>
             <DialogTitle>New Donation Batch</DialogTitle>
             <DialogContent>
-                {isEmpty ? (
+                {isEmpty && (
                     <Typography color='text.secondary' sx={{ py: 2, textAlign: 'center' }}>
                         No posts available for donation.
                     </Typography>
-                ) : (
+                )}
+                {!isEmpty && (
                     <List>
                         {posts.map((post) => (
                             <ListItem key={post.id} disablePadding>
                                 <ListItemButton onClick={() => handleToggle(post.id)}>
                                     <Checkbox edge='start' checked={selectedIds.includes(post.id)} disableRipple/>
                                     <ListItemText
-                                        primary={`#${post.id} — ${post.authorHandle ?? 'unknown'}`}
+                                        primary={`#${post.id} · ${post.authorHandle ?? 'unknown'}`}
                                         secondary={`${(post.content ?? '').slice(0, 120)} · ${((post.macedonianConfidence ?? 0) * 100).toFixed(0)}% MK`}
                                     />
                                 </ListItemButton>

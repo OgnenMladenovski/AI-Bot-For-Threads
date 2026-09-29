@@ -1,7 +1,18 @@
 import { useCallback, useEffect, useState } from 'react';
+import axios from 'axios';
 import donationApi from '../api/donationApi.ts';
 import type { CreateDonationBatchRequest, DonationBatchResponse } from '../api/types/donation.ts';
 import useSnackbar from './useSnackbar.ts';
+
+const describe = (err: unknown, fallback: string) => {
+    if (axios.isAxiosError<{ message?: string }>(err) && err.response?.data?.message) {
+        return err.response.data.message;
+    }
+    if (err instanceof Error) {
+        return err.message;
+    }
+    return fallback;
+};
 
 const useDonations = () => {
     const { showSnackbar } = useSnackbar();
@@ -14,7 +25,7 @@ const useDonations = () => {
             const response = await donationApi.findAll();
             setDonations(response.data);
         } catch (err) {
-            showSnackbar(err instanceof Error ? err.message : 'Failed to load donations.', 'error');
+            showSnackbar(describe(err, 'Failed to load donations.'), 'error');
         } finally {
             setLoading(false);
         }
@@ -25,7 +36,7 @@ const useDonations = () => {
             await donationApi.add(data);
             await fetch();
         } catch (err) {
-            showSnackbar(err instanceof Error ? err.message : 'Failed to create batch.', 'error');
+            showSnackbar(describe(err, 'Failed to create batch.'), 'error');
         }
     }, [fetch, showSnackbar]);
 
@@ -34,7 +45,7 @@ const useDonations = () => {
             await donationApi.approve(id.toString());
             await fetch();
         } catch (err) {
-            showSnackbar(err instanceof Error ? err.message : 'Failed to approve batch.', 'error');
+            showSnackbar(describe(err, 'Failed to approve batch.'), 'error');
         }
     }, [fetch, showSnackbar]);
 
@@ -43,7 +54,7 @@ const useDonations = () => {
             await donationApi.submit(id.toString());
             await fetch();
         } catch (err) {
-            showSnackbar(err instanceof Error ? err.message : 'Failed to submit batch.', 'error');
+            showSnackbar(describe(err, 'Failed to submit batch.'), 'error');
         }
     }, [fetch, showSnackbar]);
 
