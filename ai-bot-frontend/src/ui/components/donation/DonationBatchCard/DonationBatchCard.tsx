@@ -12,11 +12,11 @@ interface DonationBatchCardProps {
 
 const accents: Record<DonationStatus, string> = {
     DRAFT: '#9B928A',
-    APPROVED: '#8A6A3B',
+    APPROVED: '#B07A28',
     SUBMITTED: '#E0A329',
-    ACCEPTED: '#3F6B4A',
-    REJECTED: '#8C2F2F',
-    FAILED: '#8C2F2F'
+    ACCEPTED: '#2E7D46',
+    REJECTED: '#A81F1F',
+    FAILED: '#A81F1F'
 };
 
 const DonationBatchCard = ({ batch, onApprove, onSubmit }: DonationBatchCardProps) => {

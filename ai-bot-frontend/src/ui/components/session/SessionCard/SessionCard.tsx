@@ -15,9 +15,9 @@ interface SessionCardProps {
 const accents: Record<SessionStatus, string> = {
     CREATED: '#9B928A',
     RUNNING: '#E0A329',
-    PAUSED: '#8A6A3B',
-    COMPLETED: '#3F6B4A',
-    FAILED: '#8C2F2F'
+    PAUSED: '#B07A28',
+    COMPLETED: '#2E7D46',
+    FAILED: '#A81F1F'
 };
 
 const formatTimestamp = (value: string | null) => {

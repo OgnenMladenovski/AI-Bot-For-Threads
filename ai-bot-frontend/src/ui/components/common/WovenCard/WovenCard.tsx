@@ -21,7 +21,7 @@ const WovenCard = ({ accent, eyebrow, badge, children, actions }: WovenCardProps
         py: 0.4,
         backgroundColor: '#FDFCFC',
         border: '1px solid',
-        borderColor: alpha(accent, 0.3),
+        borderColor: alpha(accent, 0.45),
         minWidth: 0
     };
 
@@ -36,19 +36,19 @@ const WovenCard = ({ accent, eyebrow, badge, children, actions }: WovenCardProps
                     px: 1.5,
                     py: 1.25,
                     overflow: 'hidden',
-                    backgroundColor: alpha(accent, 0.09),
-                    borderBottom: `2px solid ${accent}`
+                    backgroundColor: alpha(accent, 0.16),
+                    borderBottom: `3px solid ${accent}`
                 }}
             >
                 <Box sx={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', gap: '7px', pointerEvents: 'none' }}>
                     {Array.from({ length: 16 }).map((_stitch, index) => (
-                        <Ornament key={index} size={26} color={accent} opacity={0.17}/>
+                        <Ornament key={index} size={26} color={accent} opacity={0.24}/>
                     ))}
                 </Box>
 
                 <Box sx={{ position: 'relative', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 1, minHeight: 26 }}>
-                    <Box sx={{ ...plate, overflow: 'hidden' }}>{eyebrow}</Box>
-                    {badge && <Box sx={plate}>{badge}</Box>}
+                    <Box sx={{ ...plate, overflow: 'hidden', flexShrink: 1 }}>{eyebrow}</Box>
+                    {badge && <Box sx={{ ...plate, flexShrink: 0 }}>{badge}</Box>}
                 </Box>
             </Box>
 

@@ -3,6 +3,7 @@ import { Fragment } from 'react';
 import type { DonationStatus } from '../../../../api/types/donation.ts';
 
 const STEPS: DonationStatus[] = ['DRAFT', 'APPROVED', 'SUBMITTED', 'ACCEPTED'];
+const ROW_HEIGHT = 18;
 
 interface StatusThreadProps {
     status: DonationStatus;
@@ -22,6 +23,7 @@ const StatusThread = ({ status }: StatusThreadProps) => {
             {STEPS.map((step, index) => {
                 let dotColor = '#E5E0DC';
                 let labelColor = 'text.secondary';
+                let labelWeight = 700;
                 let size = 9;
                 let label: string = step;
 
@@ -30,7 +32,8 @@ const StatusThread = ({ status }: StatusThreadProps) => {
                     labelColor = 'text.primary';
                 }
                 if (index === reached) {
-                    size = 14;
+                    size = ROW_HEIGHT;
+                    labelWeight = 800;
                 }
                 if (failed && index === 3) {
                     dotColor = '#8C2F2F';
@@ -41,24 +44,25 @@ const StatusThread = ({ status }: StatusThreadProps) => {
                 return (
                     <Fragment key={step}>
                         <Box sx={{ textAlign: 'center', flexGrow: 1, flexBasis: 0, minWidth: 0 }}>
-                            <Box
-                                sx={{
-                                    width: size,
-                                    height: size,
-                                    mx: 'auto',
-                                    borderRadius: '2px',
-                                    transform: 'rotate(45deg)',
-                                    backgroundColor: dotColor
-                                }}
-                            />
+                            <Box sx={{ height: ROW_HEIGHT, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <Box
+                                    sx={{
+                                        width: size,
+                                        height: size,
+                                        borderRadius: '2px',
+                                        transform: 'rotate(45deg)',
+                                        backgroundColor: dotColor
+                                    }}
+                                />
+                            </Box>
                             <Typography
-                                sx={{ mt: 0.75, fontSize: 9, fontWeight: 700, letterSpacing: '0.04em', color: labelColor }}
+                                sx={{ mt: 0.75, fontSize: 9, fontWeight: labelWeight, letterSpacing: '0.04em', color: labelColor }}
                             >
                                 {label}
                             </Typography>
                         </Box>
                         {index < STEPS.length - 1 && (
-                            <Box sx={{ width: 14, flexShrink: 0, borderTop: '2px dashed #E5E0DC', mt: `${size / 2}px` }}/>
+                            <Box sx={{ width: 14, flexShrink: 0, borderTop: '2px dashed #E5E0DC', mt: `${ROW_HEIGHT / 2}px` }}/>
                         )}
                     </Fragment>
                 );

@@ -21,9 +21,15 @@ const PostCard = ({ post, onDelete }: PostCardProps) => {
         preview = content.slice(0, 220) + '…';
     }
 
-    let accent = '#9B928A';
-    if (confidence >= 0.5) {
-        accent = '#A02222';
+    let accent = '#A99E96';
+    if (confidence >= 0.9) {
+        accent = '#8C1414';
+    }
+    else if (confidence >= 0.7) {
+        accent = '#B32D22';
+    }
+    else if (confidence >= 0.5) {
+        accent = '#C2703A';
     }
 
     let batchLabel = 'Not donated';
